@@ -1,0 +1,6 @@
+transformers==4.36.2
+datasets
+torch
+sentencepiece
+numpy==1.26.0
+accelerate>=0.25.0,<1.0.0
