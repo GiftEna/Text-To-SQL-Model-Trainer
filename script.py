@@ -1,7 +1,7 @@
 from transformers import T5ForConditionalGeneration, T5Tokenizer, Trainer, TrainingArguments
 from datasets import load_dataset, concatenate_datasets
 
-model_name = "t5-small"  # You can choose t5-small, t5-large, etc.
+model_name = "t5-small"
 model = T5ForConditionalGeneration.from_pretrained(model_name)
 tokenizer = T5Tokenizer.from_pretrained(model_name)
 
@@ -15,22 +15,22 @@ gretelai = load_dataset('gretelai/synthetic_text_to_sql', split='train')
 # Preprocess the datasets
 def preprocess_function(examples):
     inputs = (
-        examples.get('question') or
-        examples.get('sql_prompt') or
-        examples.get('context') or
-        examples.get('sql_context')
+            examples.get('question') or
+            examples.get('sql_prompt') or
+            examples.get('context') or
+            examples.get('sql_context')
     )
     # Handle WikiSQL's nested 'sql' dict
     if 'sql' in examples and isinstance(examples['sql'], list) and isinstance(examples['sql'][0], dict):
         targets = [sql.get('human_readable', '') if sql else '' for sql in examples['sql']]
     else:
         targets = (
-            examples.get('sql') or
-            examples.get('query') or
-            examples.get('answer') or
-            examples.get('context') or
-            examples.get('sql_context') or
-            examples.get('sql_explanation')
+                examples.get('sql') or
+                examples.get('query') or
+                examples.get('answer') or
+                examples.get('context') or
+                examples.get('sql_context') or
+                examples.get('sql_explanation')
         )
 
     # Convert to lists if single string
@@ -56,6 +56,7 @@ def preprocess_function(examples):
     labels = tokenizer(targets, max_length=512, truncation=True, padding='max_length')
     model_inputs['labels'] = labels['input_ids']
     return model_inputs
+
 
 columns_to_keep = ['input_ids', 'attention_mask', 'labels']
 # Apply preprocessing
